@@ -22,14 +22,12 @@ export function Groups() {
         data={groups}
         keyExtractor={(item) => item}
         renderItem={({ item }) => <GroupCard title={item} />}
-        contentContainerStyle={groups.length === 0 && {flex:1}}
+        contentContainerStyle={groups.length === 0 && { flex: 1 }}
         ListEmptyComponent={() => (
           <ListEmpty message="Não existe nenhuma turma cadastra." />
         )}
       />
-      <Button
-        title="Criar nova turma"
-      />
+      <Button title="Criar nova turma" />
     </Container>
   )
 }
