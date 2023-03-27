@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { FlatList } from "react-native"
 
-import { Container, Form, HeaderList, NumbersOfPlayers } from "./styles"
+import { Container, Form, HeaderList, NumberOfPlayers } from "./styles"
 
 import { Header } from "@components/Header"
 import { Highlight } from "@components/Highlight"
@@ -13,7 +13,7 @@ import { ListEmpty } from "@components/ListEmpty"
 import { Button } from "@components/Button"
 
 export function Players() {
-  const [team, setTeam] = useState("Time B")
+  const [team, setTeam] = useState("Time A")
   const [players, setPlayers] = useState([])
   return (
     <Container>
@@ -41,9 +41,9 @@ export function Players() {
           )}
           horizontal
         />
-        <NumbersOfPlayers>{players.length}</NumbersOfPlayers>
+        <NumberOfPlayers>{players.length}</NumberOfPlayers>
       </HeaderList>
-
+      
       <FlatList
         data={players}
         keyExtractor={(item) => item}
@@ -63,3 +63,6 @@ export function Players() {
     </Container>
   )
 }
+
+
+console.log()
