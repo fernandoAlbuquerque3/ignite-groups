@@ -43,7 +43,7 @@ export function Players() {
         />
         <NumberOfPlayers>{players.length}</NumberOfPlayers>
       </HeaderList>
-      
+
       <FlatList
         data={players}
         keyExtractor={(item) => item}
@@ -63,6 +63,3 @@ export function Players() {
     </Container>
   )
 }
-
-
-console.log()
