@@ -11,7 +11,6 @@ import { Button } from "@components/Button"
 import { Container } from "./styles"
 import { groupsGetAll } from "@storage/group/groupGetAll"
 
-
 export function Groups() {
   const [groups, setGroups] = useState<string[]>([])
 
