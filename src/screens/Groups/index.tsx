@@ -30,7 +30,6 @@ export function Groups() {
   }
 
 useFocusEffect(useCallback(() => {
-  console.log("use effect renderizou :) ")
   fetchGroups()
 }, []));
 
