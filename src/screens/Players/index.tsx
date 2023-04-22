@@ -1,6 +1,10 @@
 import { useState } from "react"
 import { useRoute } from "@react-navigation/native"
-import { FlatList } from "react-native"
+import { Alert, FlatList } from "react-native"
+
+import { AppError } from "@utils/AppError"
+import { PlayerAddByGroup } from "@storage/player/playerAddByGroup"
+import { PlayersGetByGroup } from "@storage/player/playersGetByGroup"
 
 import { Container, Form, HeaderList, NumberOfPlayers } from "./styles"
 
@@ -20,23 +24,50 @@ type RouteParams = {
 export function Players() {
   const [team, setTeam] = useState("Time A")
   const [players, setPlayers] = useState([])
+  const [newPlayerName, setNewPlayerName] = useState('');
 
   const route = useRoute()
 
   const { group } = route.params as RouteParams
 
+  async function handleAddPlayer() {
+    if(newPlayerName.trim().length === 0) {
+      return Alert.alert('Nova Pessoa', 'informe o nome da pessoa para adicionar ao time. ')
+    }
+    const newPlayer = {
+      name: newPlayerName,
+      team,
+    }
+
+    try {
+      await PlayerAddByGroup(newPlayer, group)
+
+     const players = await PlayersGetByGroup(group)
+
+     console.log(players)
+
+    } catch (error) {
+      if(error instanceof AppError) {
+        Alert.alert('Nova Pessoa', error.message)
+      }else {
+        console.log(error)
+        Alert.alert('Nova Pessoa','Não foi possivel adicionar ')
+      }
+    }
+  }
   return (
     <Container>
       <Header showBackButton />
 
-      <Highlight
-        title={group}
-        subtitle="adicione a galera e separe os times"
-      />
+      <Highlight title={group} subtitle="adicione a galera e separe os times" />
       <Form>
-        <Input placeholder="Nome da pessoa" autoCorrect={false} />
+        <Input
+          onChangeText={setNewPlayerName}
+          placeholder="Nome da pessoa"
+          autoCorrect={false}
+        />
 
-        <ButtonIcon icon="add" />
+        <ButtonIcon icon="add" onPress={handleAddPlayer} />
       </Form>
       <HeaderList>
         <FlatList
