@@ -3,8 +3,6 @@ import { useRoute } from "@react-navigation/native"
 import { Alert, FlatList } from "react-native"
 
 import { AppError } from "@utils/AppError"
-import { PlayerAddByGroup } from "@storage/player/playerAddByGroup"
-import { PlayersGetByGroup } from "@storage/player/playersGetByGroup"
 
 import { Container, Form, HeaderList, NumberOfPlayers } from "./styles"
 
@@ -17,13 +15,18 @@ import { PlayerCard } from "@components/PlayerCard"
 import { ListEmpty } from "@components/ListEmpty"
 import { Button } from "@components/Button"
 
+import { PlayerAddByGroup } from "@storage/player/playerAddByGroup"
+import { PlayersGetByGroup } from "@storage/player/playersGetByGroup"
+import { playersGetByGroupAndTeam } from "@storage/player/playersGetByGroupAndTeam"
+import { PlayerStorageDTO } from "@storage/player/PlayerStorageDTO"
+
 type RouteParams = {
   group: string
 }
 
 export function Players() {
   const [team, setTeam] = useState("Time A")
-  const [players, setPlayers] = useState([])
+  const [players, setPlayers] = useState<PlayerStorageDTO[]>([])
   const [newPlayerName, setNewPlayerName] = useState('');
 
   const route = useRoute()
@@ -55,6 +58,18 @@ export function Players() {
       }
     }
   }
+
+  async function fetchPlayersByTeam() {
+    try {
+      const playersByTeam = await playersGetByGroupAndTeam(group, team)
+      setPlayers(playersByTeam)
+
+    } catch (error) {
+      console.log(error)
+      Alert.alert('Pessoas', 'Não foi possível carregar as pessoas filtradas pelo time selecionado')
+    }
+  }
+
   return (
     <Container>
       <Header showBackButton />
