@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRoute } from "@react-navigation/native"
 import { Alert, FlatList } from "react-native"
 
@@ -44,10 +44,7 @@ export function Players() {
 
     try {
       await PlayerAddByGroup(newPlayer, group)
-
-     const players = await PlayersGetByGroup(group)
-
-     console.log(players)
+      fetchPlayersByTeam()
 
     } catch (error) {
       if(error instanceof AppError) {
@@ -69,6 +66,10 @@ export function Players() {
       Alert.alert('Pessoas', 'Não foi possível carregar as pessoas filtradas pelo time selecionado')
     }
   }
+
+  useEffect(() => {
+    fetchPlayersByTeam()
+  }, [team]);
 
   return (
     <Container>
@@ -102,9 +103,9 @@ export function Players() {
 
       <FlatList
         data={players}
-        keyExtractor={(item) => item}
+        keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
-          <PlayerCard name={item} onRemove={() => {}} />
+          <PlayerCard name={item.name} onRemove={() => {}} />
         )}
         ListEmptyComponent={() => (
           <ListEmpty message="Não há pessoas nesse time." />
