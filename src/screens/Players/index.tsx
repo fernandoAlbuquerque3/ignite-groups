@@ -16,7 +16,7 @@ import { ListEmpty } from "@components/ListEmpty"
 import { Button } from "@components/Button"
 
 import { PlayerAddByGroup } from "@storage/player/playerAddByGroup"
-import { PlayersGetByGroup } from "@storage/player/playersGetByGroup"
+
 import { playersGetByGroupAndTeam } from "@storage/player/playersGetByGroupAndTeam"
 import { PlayerStorageDTO } from "@storage/player/PlayerStorageDTO"
 
@@ -44,8 +44,8 @@ export function Players() {
 
     try {
       await PlayerAddByGroup(newPlayer, group)
+      setNewPlayerName('')
       fetchPlayersByTeam()
-
     } catch (error) {
       if(error instanceof AppError) {
         Alert.alert('Nova Pessoa', error.message)
@@ -79,6 +79,7 @@ export function Players() {
       <Form>
         <Input
           onChangeText={setNewPlayerName}
+          value={newPlayerName}
           placeholder="Nome da pessoa"
           autoCorrect={false}
         />
@@ -87,7 +88,7 @@ export function Players() {
       </Form>
       <HeaderList>
         <FlatList
-          data={["Time A", "Time B"]}
+          data={["Time A", "Time B"]} //colocar opção de adicionar times/guardando no storage
           keyExtractor={(item) => item}
           renderItem={({ item }) => (
             <Filter
