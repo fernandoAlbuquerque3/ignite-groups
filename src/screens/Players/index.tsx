@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { useRoute } from "@react-navigation/native"
+import { useRoute, useNavigation } from "@react-navigation/native"
 import { Alert, FlatList, TextInput } from "react-native"
 
 import { AppError } from "@utils/AppError"
@@ -15,11 +15,11 @@ import { PlayerCard } from "@components/PlayerCard"
 import { ListEmpty } from "@components/ListEmpty"
 import { Button } from "@components/Button"
 
-
 import { PlayerAddByGroup } from "@storage/player/playerAddByGroup"
 import { playersGetByGroupAndTeam } from "@storage/player/playersGetByGroupAndTeam"
 import { PlayerStorageDTO } from "@storage/player/PlayerStorageDTO"
 import { playerRemoveByGroup } from "@storage/player/playerRemoveByGroup"
+import { groupRemoveByName } from "@storage/group/groupRemoveByName"
 
 type RouteParams = {
   group: string
@@ -31,6 +31,7 @@ export function Players() {
   const [newPlayerName, setNewPlayerName] = useState('');
 
   const route = useRoute()
+  const navigation = useNavigation()
 
   const { group } = route.params as RouteParams
 
@@ -80,6 +81,24 @@ export function Players() {
       console.log(error)
       Alert.alert('Remover Participante', 'Não foi possível remover esse participante.')
     }
+  }
+
+  async function groupRemove() {
+    try {
+      await groupRemoveByName(group);
+      navigation.navigate('groups');
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Remover Grupo','Não foi possivel remover o grupo.')
+    }
+  }
+
+  async function handleGroupRemove() {
+    Alert.alert('Remover','Deseja remover o grupo?',
+    [
+      {text: 'Não', style: 'cancel'},
+      {text: 'Sim', onPress: () => groupRemove()}
+    ])
   }
 
   useEffect(() => {
@@ -138,7 +157,8 @@ export function Players() {
           players.length === 0 && { flex: 1 },
         ]}
       />
-      <Button title="Remover turma" type="SECONDARY" />
+      <Button title="Remover turma" type="SECONDARY"
+      onPress={handleGroupRemove} />
     </Container>
   )
 }
